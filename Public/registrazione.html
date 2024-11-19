@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrazione</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Registrati</h2>
+      <form id="registrazione-form" action="/registrati" method="POST">
+        <div class="textbox">
+          <input type="text" name="username" placeholder="Username" required>
+        </div>
+        <div class="textbox">
+          <input type="text" name="nome" placeholder="Nome" required>
+        </div>
+        <div class="textbox">
+          <input type="text" name="cognome" placeholder="Cognome" required>
+        </div>
+        <div class="textbox">
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="textbox">
+          <input type="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="textbox">
+          <input type="password" name="confirm_password" placeholder="Conferma Password" required>
+        </div>
+        <button type="submit" class="btn">Registrati</button>
+      </form>
+      <div id="message" style="color: red; margin-top: 10px;"></div>
+      <p>Hai già un account? <a href="/login.html">Login</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registrazione-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      fetch('/registrati', {
+        method: 'POST',
+        body: new URLSearchParams(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        const message = document.getElementById('message');
+        if (data.error) {
+          message.innerText = data.error;
+          message.style.color = 'red';
+        } else if (data.success) {
+          message.innerText = data.success;
+          message.style.color = 'green';
+        }
+      })
+      .catch(() => {
+        document.getElementById('message').innerText = 'Errore del server!';
+      });
+    });
+  </script>
+</body>
+</html>
